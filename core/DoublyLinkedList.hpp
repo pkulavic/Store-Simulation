@@ -312,6 +312,8 @@ private:
 
     // You can feel free to add private member variables and member
     // functions here; there's a pretty good chance you'll need some.
+    void clearList();
+
 };
 
 
@@ -325,10 +327,13 @@ DoublyLinkedList<ValueType>::DoublyLinkedList() noexcept
 
 template <typename ValueType>
 DoublyLinkedList<ValueType>::DoublyLinkedList(const DoublyLinkedList& list)
-    :head ( list.head), tail ( list.tail)
-// check that the list isn't empty 
-// it actually doesn't matter if the list is empty, we can still initialize it
+: head ( nullptr ), tail ( nullptr )
 {
+    ConstIterator it = list.constIterator();
+    for ( ; ! it.isPastEnd(); it.moveToNext() )
+    {
+        addToEnd( it.value() );
+    }
 }
 
 
@@ -343,21 +348,21 @@ DoublyLinkedList<ValueType>::DoublyLinkedList(DoublyLinkedList&& list) noexcept
 template <typename ValueType>
 DoublyLinkedList<ValueType>::~DoublyLinkedList() noexcept
 {
-    // Node * n = head;
-    // while ( n != nullptr )
-    // {
-    //     // Node * temp = n;
-    //     n = n -> next;
-    //     // delete temp;
-    // }
+    clearList();
 }
 
 
 template <typename ValueType>
 DoublyLinkedList<ValueType>& DoublyLinkedList<ValueType>::operator=(const DoublyLinkedList& list)
 {
-    head = list.head;
-    tail = list.tail;
+    clearList();
+    // what if list has a different ValueType than this? 
+    ConstIterator it = list.constIterator();
+    for ( ; ! it.isPastEnd(); it.moveToNext() )
+    {
+        addToEnd( it.value() );
+    }
+
     return *this;
 }
 
@@ -534,7 +539,7 @@ typename DoublyLinkedList<ValueType>::ConstIterator DoublyLinkedList<ValueType>:
 
 template <typename ValueType>
 DoublyLinkedList<ValueType>::IteratorBase::IteratorBase(const DoublyLinkedList& list) noexcept
-    : ptr ( list.head ), pastStart( list.head == nullptr ), pastEnd( list.tail == nullptr) 
+    : ptr ( list.head ), pastStart( list.isEmpty() ), pastEnd( pastStart ) 
 {
     // it can access head, right? even though head is private, Because IteratorBase 
     // is within DoublyLinkedList
@@ -706,6 +711,23 @@ void DoublyLinkedList<ValueType>::Iterator::remove(bool moveToNextAfterward)
     }
 }
 
+template <typename ValueType>
+void DoublyLinkedList<ValueType>::clearList()
+{
+        if ( isEmpty() )
+            return;
+        Node * ptr = head;
+        while ( ptr -> next != nullptr )
+        {
+            Node * next = ptr -> next;
+            delete ptr;
+            ptr = next;   
+        }
+        delete ptr;
+        head = nullptr;
+        tail = nullptr;
+}
+    
 
 
 #endif

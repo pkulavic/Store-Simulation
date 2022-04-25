@@ -20,6 +20,8 @@ int main()
     
     it.insertBefore( 1 );
 
+    // list.clearList( );
+
     return 0;
 }
 
