@@ -5,6 +5,8 @@ TEST( parkertest, addToEndEmptyList )
 {
     DoublyLinkedList< int > l1;
     l1.addToEnd( 5 );
+    EXPECT_EQ(5, l1.first() );
+    EXPECT_EQ(5, l1.last() );
 }
 
 

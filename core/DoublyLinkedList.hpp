@@ -342,6 +342,8 @@ DoublyLinkedList<ValueType>::DoublyLinkedList(DoublyLinkedList&& list) noexcept
 {
     head = list.head; 
     tail = list.tail;
+    list.head = nullptr;
+    list.tail = nullptr;
 }
 
 
@@ -370,8 +372,12 @@ DoublyLinkedList<ValueType>& DoublyLinkedList<ValueType>::operator=(const Doubly
 template <typename ValueType>
 DoublyLinkedList<ValueType>& DoublyLinkedList<ValueType>::operator=(DoublyLinkedList&& list) noexcept
 {
-    head = list.head;
-    tail = list.tail;
+    Node * h = list.head;
+    Node * t = list.tail;
+    list.head = head;
+    list.tail = tail;
+    head = h;
+    tail = t;
     return *this;
 }
 
@@ -541,8 +547,6 @@ template <typename ValueType>
 DoublyLinkedList<ValueType>::IteratorBase::IteratorBase(const DoublyLinkedList& list) noexcept
     : ptr ( list.head ), pastStart( list.isEmpty() ), pastEnd( pastStart ) 
 {
-    // it can access head, right? even though head is private, Because IteratorBase 
-    // is within DoublyLinkedList
 }
 
 
@@ -558,7 +562,7 @@ void DoublyLinkedList<ValueType>::IteratorBase::moveToNext()
         pastEnd = true;
 
     // if ptr is past start, iterating forward should point ptr to head
-    // since ptr should already be pointing at head, just change pastStart to false 
+    // since ptr already points at head, just change pastStart to false 
     else if ( pastStart ) 
         pastStart = false;
 
@@ -646,7 +650,7 @@ void DoublyLinkedList<ValueType>::Iterator::insertBefore(const ValueType& value)
         list -> addToStart( value );
     }
     else
-    // In the general case (ptr is neither at head nor past start), perform swapping of pointers.
+    // In the general case (ptr is neither at head nor past start), perform rearranging of pointers.
     {
         Node * newNode = new Node;
         newNode -> value = value;

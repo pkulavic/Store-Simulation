@@ -432,13 +432,13 @@ TEST(DoublyLinkedList_SanityCheckTests, listsCanBeMoveConstructed_LeavingOrigina
     list1.addToEnd(20);
     list1.addToEnd(30);
 
-    // DoublyLinkedList<int> list2 = std::move(list1);
+    DoublyLinkedList<int> list2 = std::move(list1);
 
-    // EXPECT_EQ(0, list1.size());
+    EXPECT_EQ(0, list1.size());
 
-    // EXPECT_EQ(3, list2.size());
-    // EXPECT_EQ(10, list2.first());
-    // EXPECT_EQ(30, list2.last());
+    EXPECT_EQ(3, list2.size());
+    EXPECT_EQ(10, list2.first());
+    EXPECT_EQ(30, list2.last());
 }
 
 
@@ -484,14 +484,14 @@ TEST(DoublyLinkedList_SanityCheckTests, listsCanBeMoveAssigned_SwappingContents)
     list2.addToEnd(15);
     list2.addToEnd(25);
 
-    // list1 = std::move(list2);
+    list1 = std::move(list2);
 
-    // EXPECT_EQ(3, list1.size());
-    // EXPECT_EQ(5, list1.first());
-    // EXPECT_EQ(25, list1.last());
+    EXPECT_EQ(3, list1.size());
+    EXPECT_EQ(5, list1.first());
+    EXPECT_EQ(25, list1.last());
 
-    // EXPECT_EQ(4, list2.size());
-    // EXPECT_EQ(10, list2.first());
-    // EXPECT_EQ(40, list2.last());
+    EXPECT_EQ(4, list2.size());
+    EXPECT_EQ(10, list2.first());
+    EXPECT_EQ(40, list2.last());
 }
 
