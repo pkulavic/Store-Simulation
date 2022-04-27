@@ -523,7 +523,7 @@ unsigned int DoublyLinkedList<ValueType>::size() const noexcept
 template <typename ValueType>
 bool DoublyLinkedList<ValueType>::isEmpty() const noexcept
 {
-    // or what about sz == 0? 
+    // or what about size() == 0? 
     // if the implementation is correct, these expressions should both indicate an empty list
     return ( head == nullptr );
 }
@@ -553,7 +553,7 @@ DoublyLinkedList<ValueType>::IteratorBase::IteratorBase(const DoublyLinkedList& 
 template <typename ValueType>
 void DoublyLinkedList<ValueType>::IteratorBase::moveToNext()
 {
-    if ( pastEnd ) 
+    if ( pastEnd ) // accessing a private member directly. Consider calling isPastEnd() instead.
         throw IteratorException();
 
     // if ptr is at the last node, change pastEnd to true but don't change 
@@ -611,7 +611,7 @@ DoublyLinkedList<ValueType>::ConstIterator::ConstIterator(const DoublyLinkedList
 template <typename ValueType>
 const ValueType& DoublyLinkedList<ValueType>::ConstIterator::value() const
 {
-    if ( IteratorBase::isPastStart() | IteratorBase::isPastEnd() )
+    if ( IteratorBase::isPastStart() || IteratorBase::isPastEnd() )
         throw IteratorException();
     return IteratorBase::ptr -> value;
 }
@@ -629,7 +629,7 @@ DoublyLinkedList<ValueType>::Iterator::Iterator(DoublyLinkedList& list) noexcept
 template <typename ValueType>
 ValueType& DoublyLinkedList<ValueType>::Iterator::value() const
 {
-    if ( IteratorBase::isPastStart() | IteratorBase::isPastEnd() )
+    if ( IteratorBase::isPastStart() || IteratorBase::isPastEnd() )
         throw IteratorException();    
     return IteratorBase::ptr -> value;
 }
@@ -684,7 +684,7 @@ void DoublyLinkedList<ValueType>::Iterator::insertAfter(const ValueType& value)
 template <typename ValueType>
 void DoublyLinkedList<ValueType>::Iterator::remove(bool moveToNextAfterward)
 {
-    if ( IteratorBase::isPastStart() | IteratorBase::isPastEnd() )
+    if ( IteratorBase::isPastStart() || IteratorBase::isPastEnd() )
         throw IteratorException();
     
     if ( IteratorBase::ptr -> prev == nullptr ) // If at first node 
