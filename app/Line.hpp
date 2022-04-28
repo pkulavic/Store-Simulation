@@ -5,41 +5,28 @@
 #include "Queue.hpp"
 #include "Customer.hpp"
 
-class Line 
+class Line : public Queue< Customer * >
 {
 private:
     unsigned int maxLength;
-    unsigned int line_no;
-    Queue< Customer * > q;
+    
 public:
+    unsigned int lineNumber;
 
-    Line( unsigned int maxLen, int ln ) : maxLength ( maxLen ), line_no ( ln )
-    {
-    }
-
-    int add ( Customer * c );
-    int length();
-    Customer * remove ();
-
+    Line( unsigned int maxLen, unsigned int ln );
+    bool isFull();
 };
 
 
-int Line::add( Customer * c )
+Line::Line( unsigned int maxLen, unsigned int ln ) : Queue<Customer *> {},  maxLength ( maxLen ), lineNumber ( ln )
 {
-    if ( length() == maxLength )
-        {
-            return 0;   
-        }
-        q.enqueue( c );
-        std::cout << c->time() << " entered line " << line_no << " length " << length() << std::endl;
 
-        return 1;
 }
 
 
-int Line::length()
+bool Line::isFull()
 {
-    return q.size();
+    return ( size() == maxLength );
 }
 
 #endif
